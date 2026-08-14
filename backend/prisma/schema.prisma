@@ -1,0 +1,247 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// Enums
+// =============================================================================
+
+enum Role {
+  ADMIN
+  RELEASE_MANAGER
+  DEVELOPER
+  VIEWER
+}
+
+enum TargetingType {
+  USER_ID
+  REGION
+}
+
+enum Severity {
+  SEV_1
+  SEV_2
+  SEV_3
+  SEV_4
+}
+
+enum IncidentStatus {
+  INVESTIGATING
+  IDENTIFIED
+  MONITORING
+  RESOLVED
+}
+
+// =============================================================================
+// Users
+// =============================================================================
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(VIEWER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdFlags    FeatureFlag[]  @relation("FeatureFlagCreatedBy")
+  updatedFlags    FeatureFlag[]  @relation("FeatureFlagUpdatedBy")
+  createdIncidents Incident[]    @relation("IncidentCreatedBy")
+  assignedIncidents Incident[]   @relation("IncidentAssignedTo")
+  auditLogs       AuditLog[]
+  incidentEvents  IncidentEvent[]
+  apiKeys         ApiKey[]
+
+  @@index([role])
+  @@map("users")
+}
+
+// =============================================================================
+// Environments
+// =============================================================================
+
+model Environment {
+  id          String   @id @default(cuid())
+  key         String   @unique // development | staging | production
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  configs FeatureFlagConfig[]
+
+  @@map("environments")
+}
+
+// =============================================================================
+// Feature Flags
+// =============================================================================
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  key         String   @unique // e.g. checkout-v2
+  name        String
+  description String?
+  createdById String
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User  @relation("FeatureFlagCreatedBy", fields: [createdById], references: [id])
+  updatedBy User? @relation("FeatureFlagUpdatedBy", fields: [updatedById], references: [id])
+
+  configs       FeatureFlagConfig[]
+  affectedBy    IncidentAffectedFlag[]
+
+  @@index([key])
+  @@map("feature_flags")
+}
+
+/// Per-environment configuration for a logical feature flag.
+model FeatureFlagConfig {
+  id                String   @id @default(cuid())
+  featureFlagId     String
+  environmentId     String
+  enabled           Boolean  @default(false)
+  rolloutPercentage Int      @default(0) // 0–100
+  killed            Boolean  @default(false)
+  killReason        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  featureFlag FeatureFlag @relation(fields: [featureFlagId], references: [id], onDelete: Cascade)
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  targetingRules TargetingRule[]
+
+  @@unique([featureFlagId, environmentId])
+  @@index([environmentId])
+  @@map("feature_flag_configs")
+}
+
+model TargetingRule {
+  id                String        @id @default(cuid())
+  configId          String
+  type              TargetingType
+  value             String // user id or region code (AU, IN, UK, US, ...)
+  rolloutPercentage Int           @default(100)
+  priority          Int           @default(0) // higher = evaluated first
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  config FeatureFlagConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@index([configId, priority])
+  @@map("targeting_rules")
+}
+
+// =============================================================================
+// Incidents
+// =============================================================================
+
+model Incident {
+  id           String         @id @default(cuid())
+  number       String         @unique // e.g. INC-1042
+  title        String
+  description  String?
+  severity     Severity
+  status       IncidentStatus @default(INVESTIGATING)
+  createdById  String
+  assignedToId String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  resolvedAt   DateTime?
+
+  createdBy  User  @relation("IncidentCreatedBy", fields: [createdById], references: [id])
+  assignedTo User? @relation("IncidentAssignedTo", fields: [assignedToId], references: [id])
+
+  affectedFlags IncidentAffectedFlag[]
+  events        IncidentEvent[]
+
+  @@index([status])
+  @@index([severity])
+  @@index([number])
+  @@map("incidents")
+}
+
+model IncidentAffectedFlag {
+  id            String   @id @default(cuid())
+  incidentId    String
+  featureFlagId String
+  createdAt     DateTime @default(now())
+
+  incident    Incident    @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  featureFlag FeatureFlag @relation(fields: [featureFlagId], references: [id], onDelete: Cascade)
+
+  @@unique([incidentId, featureFlagId])
+  @@map("incident_affected_flags")
+}
+
+/// Append-only incident timeline (UX). Distinct from cross-entity AuditLog.
+model IncidentEvent {
+  id         String   @id @default(cuid())
+  incidentId String
+  type       String // STATUS_CHANGED | FEATURE_DISABLED | COMMENT | ...
+  message    String
+  actorId    String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  incident Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  actor    User     @relation(fields: [actorId], references: [id])
+
+  @@index([incidentId, createdAt])
+  @@map("incident_events")
+}
+
+// =============================================================================
+// Audit Logs (append-only from application perspective)
+// =============================================================================
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  actorId       String
+  action        String // FEATURE_FLAG_UPDATED | KILL_SWITCH | INCIDENT_CREATED | ...
+  entityType    String // FeatureFlag | Incident | User | ...
+  entityId      String
+  previousValue Json?
+  newValue      Json?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  actor User @relation(fields: [actorId], references: [id])
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// =============================================================================
+// API Keys (machine clients / SDK)
+// =============================================================================
+
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  /// Public prefix for display, e.g. sb_live_a1b2
+  keyPrefix  String
+  /// SHA-256 hex of the full secret key
+  keyHash    String    @unique
+  createdById String
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  @@index([keyPrefix])
+  @@index([revokedAt])
+  @@map("api_keys")
+}

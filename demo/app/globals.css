@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root {
+  --ink: #1a1714;
+  --paper: #f3efe6;
+  --paper-2: #e8e1d4;
+  --accent: #0f6b5c;
+  --accent-soft: #d7ebe6;
+  --warn: #b45309;
+  --muted: #6b645a;
+  --line: #d4ccbe;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Source Sans 3', Georgia, serif;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, #dfece8, transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, #f0e4d4, transparent),
+    var(--paper);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+.shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.brand {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.65rem;
+  letter-spacing: -0.02em;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.controls label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.controls select,
+.controls button {
+  border: 1px solid var(--line);
+  background: white;
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.controls button {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.hero {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  background: white;
+  margin-bottom: 24px;
+}
+
+.hero-classic {
+  padding: 36px;
+}
+
+.hero-v2 {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  min-height: 320px;
+}
+
+.hero-v2 .copy {
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-v2 .art {
+  background:
+    linear-gradient(145deg, #0f6b5c 0%, #163a34 45%, #1a1714 100%);
+  color: #f3efe6;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.hero h1 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  margin: 0 0 12px;
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 38ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: white;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn.audio {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 800px) {
+  .hero-v2 {
+    grid-template-columns: 1fr;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 20px;
+}
+
+.card h2 {
+  font-family: Fraunces, Georgia, serif;
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.gate {
+  margin-top: 16px;
+  border: 1px dashed var(--warn);
+  background: #fff7ed;
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #9a3412;
+}
+
+.flags {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.flag-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.85rem;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--paper-2);
+}
+
+.flag-row code {
+  font-size: 0.78rem;
+}
+
+.on {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.off {
+  color: var(--muted);
+}
+
+.error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.hint {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}

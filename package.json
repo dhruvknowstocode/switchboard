@@ -1,0 +1,31 @@
+{
+  "name": "switchboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SWITCHBOARD — Real-Time Feature Release & Incident Control Platform",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "packages/sdk",
+    "demo"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:demo": "npm run dev --workspace=folio-demo",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:sdk": "npm run build --workspace=@switchboard/sdk",
+    "build:demo": "npm run build --workspace=folio-demo",
+    "lint:backend": "npm run lint --workspace=backend",
+    "lint:frontend": "npm run lint --workspace=frontend",
+    "prisma:generate": "npm run prisma:generate --workspace=backend",
+    "prisma:push": "npm run prisma:push --workspace=backend",
+    "prisma:migrate": "npm run prisma:migrate --workspace=backend",
+    "prisma:studio": "npm run prisma:studio --workspace=backend",
+    "prisma:seed": "npm run prisma:seed --workspace=backend"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #070b14;
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+code {
+  font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@keyframes flash-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: flash-in 180ms ease-out;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+@layer components {
+  .board-shell {
+    @apply relative min-h-screen bg-board-bg text-slate-50;
+    background-image: theme('backgroundImage.board-radial');
+  }
+
+  .board-shell::before {
+    content: '';
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    background-image: theme('backgroundImage.board-grid');
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black, transparent);
+    opacity: 0.35;
+  }
+
+  .board-card {
+    @apply relative rounded-panel border border-board-border/90 bg-board-panel/90 shadow-panel backdrop-blur-sm;
+  }
+
+  .board-card-header {
+    @apply flex items-center justify-between gap-3 border-b border-board-border/80 px-4 py-3.5;
+  }
+
+  .board-row {
+    @apply block rounded-xl border border-board-border/80 bg-board-elevated/50 px-4 py-3.5 transition duration-150;
+  }
+
+  .board-row:hover {
+    @apply border-board-accent/40 bg-board-elevated shadow-glow;
+  }
+
+  .board-input {
+    @apply w-full rounded-lg border border-board-border bg-board-bg/80 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-board-muted/50 focus:border-board-accent focus:ring-2 focus:ring-board-accent/25 disabled:opacity-50;
+  }
+}
