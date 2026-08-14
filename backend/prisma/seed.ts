@@ -17,25 +17,26 @@ const DEMO_USERS: Array<{
     email: 'admin@switchboard.local',
     name: 'Admin User',
     role: 'ADMIN',
-    password: 'Admin123!',
+    // Local seed only — never show on public login UI. Override via ADMIN_SEED_PASSWORD.
+    password: process.env.ADMIN_SEED_PASSWORD ?? 'SbCtrl#2026!Ops',
   },
   {
     email: 'release@switchboard.local',
     name: 'Release Manager',
     role: 'RELEASE_MANAGER',
-    password: 'Release123!',
+    password: process.env.RELEASE_SEED_PASSWORD ?? 'SbRelease#2026!',
   },
   {
     email: 'dev@switchboard.local',
     name: 'Developer',
     role: 'DEVELOPER',
-    password: 'Dev123!',
+    password: process.env.DEV_SEED_PASSWORD ?? 'SbDev#2026!',
   },
   {
     email: 'viewer@switchboard.local',
     name: 'Viewer',
     role: 'VIEWER',
-    password: 'Viewer123!',
+    password: process.env.VIEWER_SEED_PASSWORD ?? 'Viewer123!',
   },
 ];
 
@@ -243,10 +244,7 @@ async function main(): Promise<void> {
   }
 
   console.log('[seed] Done.');
-  console.log('[seed] Demo logins:');
-  for (const demo of DEMO_USERS) {
-    console.log(`  - ${demo.email} / ${demo.password}`);
-  }
+  console.log('[seed] Operator accounts upserted (passwords not printed — check your seed env / local notes).');
   console.log(`[seed] Folio demo API key: ${DEMO_API_KEY}`);
 }
 

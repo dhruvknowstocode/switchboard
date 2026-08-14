@@ -9,8 +9,8 @@ import { ApiError } from '@/lib/api-client';
 export function LoginForm() {
   const router = useRouter();
   const { login, loading, user } = useAuth();
-  const [email, setEmail] = useState('admin@switchboard.local');
-  const [password, setPassword] = useState('Admin123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -92,9 +92,9 @@ export function LoginForm() {
       </Button>
 
       <p className="text-[11px] leading-relaxed text-board-muted">
-        Demo:{' '}
-        <span className="font-mono text-board-accent">admin@switchboard.local</span> /{' '}
-        <span className="font-mono text-board-accent">Admin123!</span>
+        Public demo (read-only VIEWER):{' '}
+        <span className="font-mono text-board-accent">viewer@switchboard.local</span> /{' '}
+        <span className="font-mono text-board-accent">Viewer123!</span>
       </p>
     </form>
   );

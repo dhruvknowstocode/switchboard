@@ -345,6 +345,8 @@ Controllers are thin; services own business rules; repositories own Prisma acces
 | `/environments` | Env management |
 | `/settings` | Operator settings |
 
+> **Security:** The public login page may expose a **VIEWER** demo account only (read-only). Never publish ADMIN / RELEASE_MANAGER passwords on the UI or in the README.
+
 ---
 
 ## Roadmap
