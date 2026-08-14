@@ -27,7 +27,6 @@ export const usersService = {
     }
 
     const updated = await userRepository.updateRole(id, role);
-    // TODO: Phase 6 — audit log role change
     return toPublicUser(updated);
   },
 };

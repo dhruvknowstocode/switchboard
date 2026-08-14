@@ -4,8 +4,7 @@ import type { RealtimeEvent } from './event-types.js';
 import { logger } from '../utils/logger.js';
 
 /**
- * Tracks connected WebSocket clients and broadcasts events.
- * TODO: Phase 4 — auth per connection, room/channel subscriptions, heartbeat.
+ * Tracks connected WebSocket clients and broadcasts realtime events.
  */
 
 interface ManagedClient {

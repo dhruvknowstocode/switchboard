@@ -1,25 +1,19 @@
 import { createHash } from 'crypto';
 
 /**
- * Deterministic hashing helpers for progressive rollout evaluation.
- * DO NOT use Math.random() for flag evaluation.
- *
- * TODO: Phase 3 — finalize bucket algorithm and unit tests.
+ * Deterministic hashing for progressive rollout.
+ * Do not use Math.random() — same user must get a stable bucket.
  */
 
-/**
- * Maps a stable input string to a bucket in [0, 99].
- */
+/** Maps a stable input string to a bucket in [0, 99]. */
 export function hashToBucket(input: string): number {
   const digest = createHash('sha256').update(input).digest();
-  // Use first 4 bytes as unsigned int for stable modulo
+  // First 4 bytes as unsigned int → stable modulo 100
   const value = digest.readUInt32BE(0);
   return value % 100;
 }
 
-/**
- * Builds the canonical evaluation key for a user in a given flag/env.
- */
+/** Canonical key so the same user can land in different buckets per flag/env. */
 export function buildEvaluationHashKey(
   flagKey: string,
   environment: string,
@@ -28,9 +22,7 @@ export function buildEvaluationHashKey(
   return `${flagKey}:${environment}:${userId}`;
 }
 
-/**
- * Returns true if the user falls within the given rollout percentage (0–100).
- */
+/** True if the user's bucket is within the rollout percentage (0–100). */
 export function isInRollout(
   flagKey: string,
   environment: string,

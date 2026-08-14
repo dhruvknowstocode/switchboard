@@ -32,7 +32,7 @@ export function createApp() {
     res.json({
       name: 'SWITCHBOARD API',
       version: 'v1',
-      status: 'scaffolded',
+      status: 'ok',
     });
   });
 

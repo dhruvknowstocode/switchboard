@@ -6,7 +6,7 @@ SWITCHBOARD is a production-style portfolio project that demonstrates full-stack
 
 Operators control production features without redeploying. Example: change `checkout-v2` rollout from 25% → 50% in production; the update persists to PostgreSQL, invalidates Redis cache, publishes via Redis Pub/Sub, and fans out to connected dashboards over WebSockets in real time.
 
-> **Current status:** Phase 1 scaffold — architecture, monorepo, Docker, Prisma schema, Express layers, Next.js routes, and stubs. Business logic is intentionally incomplete (`TODO` markers by phase).
+> **Current status:** Production-style portfolio build — auth/RBAC, feature flags, Redis cache + Pub/Sub, WebSockets, incidents, audit UI, `@switchboard/sdk`, and Folio demo. Deployed control plane + API.
 
 ---
 
@@ -81,7 +81,7 @@ Infrastructure (Redis, WebSocket, auth middleware) sits beside services — not 
 | Backend | Node.js, Express.js, TypeScript (no NestJS) |
 | Database | PostgreSQL + Prisma ORM |
 | Realtime / cache | Redis (cache + Pub/Sub), `ws` WebSocket server |
-| Auth (Phase 2) | JWT + RBAC roles |
+| Auth | JWT + RBAC roles |
 | Local infra | Docker Compose (Postgres 16 + Redis 7) |
 
 ---
@@ -99,7 +99,7 @@ Infrastructure (Redis, WebSocket, auth middleware) sits beside services — not 
 │   ├── services/
 │   └── types/
 ├── backend/
-│   ├── prisma/               # schema.prisma + seed stub
+│   ├── prisma/               # schema.prisma + seed
 │   └── src/
 │       ├── config/
 │       ├── controllers/
@@ -150,12 +150,12 @@ cp frontend/.env.example frontend/.env.local
 npm install
 ```
 
-### 4. Prisma generate (and migrate when ready)
+### 4. Prisma generate & seed
 
 ```bash
 npm run prisma:generate
-# When implementing Phase 2+:
-# npm run prisma:migrate
+# npm run prisma:push   # apply schema
+# npm run prisma:seed   # demo data
 ```
 
 ### 5. Run apps
@@ -181,7 +181,7 @@ npm run dev:frontend
 |----------|--------|---------|
 | `DATABASE_URL` | backend | Prisma → PostgreSQL |
 | `REDIS_URL` | backend | Cache + Pub/Sub |
-| `JWT_SECRET` | backend | JWT signing (Phase 2) |
+| `JWT_SECRET` | backend | JWT signing |
 | `JWT_EXPIRES_IN` | backend | Token TTL |
 | `CORS_ORIGIN` | backend | Allowed frontend origin |
 | `PORT` | backend | HTTP/WS port (default `4000`) |
@@ -218,13 +218,13 @@ Flags are split into definition + per-environment config so `checkout-v2` can be
 | Pub/Sub | `feature-flags` | Flag mutation fanout |
 | Pub/Sub | `incidents` | Incident mutation fanout |
 | Pub/Sub | `system-events` | System / health notices |
-| Rate limiting | (Phase 6) | Not implemented yet |
+| Rate limiting | In-memory on `/evaluate` | Sufficient for demo; Redis limiter optional |
 
 Writes always invalidate/update cache and **publish through Redis Pub/Sub** (even on a single instance) so horizontal scaling stays correct.
 
 ---
 
-## SDK + Folio demo (Phase 6)
+## SDK + Folio demo
 
 External apps integrate through `@switchboard/sdk` (not the operator JWT).
 
@@ -349,25 +349,18 @@ Controllers are thin; services own business rules; repositories own Prisma acces
 
 ---
 
-## Roadmap
+## Roadmap (completed → optional next)
 
-### PHASE 1 — Scaffold (current)
-Docker, PostgreSQL, Redis, Prisma schema, Express layered backend, Next.js route shell, Redis/WS stubs, README.
-
-### PHASE 2 — Authentication
-JWT login, password hashing, `/me`, RBAC middleware enforcement, user management.
-
-### PHASE 3 — Feature Flags
-Environments, configs, rollouts, targeting rules, evaluation engine wired to Postgres.
-
-### PHASE 4 — Real-Time Infrastructure
-Redis cache hit path, Pub/Sub publishers, WebSocket auth, live dashboard feed.
-
-### PHASE 5 — Incident Management
-Incidents, kill switch workflows, rollback, incident ↔ flag integration + timeline.
-
-### PHASE 6 — Production Hardening
-Audit logs UI/API, evaluation SDK, rate limiting, observability, deployment (Vercel + Railway/Render/AWS).
+| Area | Status |
+|------|--------|
+| Scaffold / monorepo / Docker | Done |
+| Auth + RBAC | Done |
+| Feature flags + targeting + evaluate | Done |
+| Redis cache + Pub/Sub + WebSockets | Done |
+| Incidents + kill switch | Done |
+| Audit UI + SDK + Folio demo | Done |
+| Deploy (Vercel + Render + Neon + Upstash) | Done |
+| WS JWT auth, deeper observability | Optional |
 
 ---
 

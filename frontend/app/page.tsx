@@ -1,9 +1,6 @@
 import { redirect } from 'next/navigation';
 
-/**
- * Root entry — send operators to the control dashboard.
- * TODO: Phase 2 — redirect to /login when unauthenticated.
- */
+/** Root entry — authenticated shell sends unauthenticated users to /login. */
 export default function HomePage() {
   redirect('/dashboard');
 }

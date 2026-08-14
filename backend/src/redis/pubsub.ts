@@ -4,13 +4,8 @@ import type { RealtimeEvent, RealtimeChannel } from '../websocket/event-types.js
 import { broadcastToClients } from '../websocket/connection-manager.js';
 
 /**
- * Redis Pub/Sub channels for realtime fanout.
- *
- * Architecture:
- * Service mutation → publish(channel, event) → subscriber → WebSocket broadcast
- *
- * Always publish via Redis (even single-instance) so multi-instance scaling works.
- * Feature-flag publishers are wired from featureFlagsService (Phase 4).
+ * Redis Pub/Sub fanout for realtime dashboards.
+ * Publish via Redis (even on one instance) so multi-instance deploys stay consistent.
  */
 
 export const PUBSUB_CHANNELS = {
@@ -40,7 +35,7 @@ export async function initPubSubSubscriptions(): Promise<void> {
 
   try {
     if (redisSubscriber.status !== 'ready') {
-      logger.warn('Redis subscriber not ready — skipping Pub/Sub init (scaffold)');
+      logger.warn('Redis subscriber not ready — skipping Pub/Sub init');
       return;
     }
 
@@ -60,7 +55,7 @@ export async function initPubSubSubscriptions(): Promise<void> {
 
     logger.info('Redis Pub/Sub subscribed', { channels });
   } catch (error) {
-    logger.warn('Redis Pub/Sub subscription failed (scaffold degraded mode)', {
+    logger.warn('Redis Pub/Sub subscription failed (degraded mode)', {
       error: error instanceof Error ? error.message : String(error),
     });
   }

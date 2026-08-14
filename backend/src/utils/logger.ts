@@ -9,10 +9,7 @@ const LEVEL_ORDER: Record<LogLevel, number> = {
   error: 40,
 };
 
-/**
- * Minimal structured logger stub.
- * TODO: Phase 6 — pino / winston, request correlation, JSON in production.
- */
+/** Lightweight structured logger (stdout JSON-ish objects). */
 function log(level: LogLevel, message: string, meta?: Record<string, unknown>): void {
   if (LEVEL_ORDER[level] < LEVEL_ORDER[env.LOG_LEVEL]) return;
 

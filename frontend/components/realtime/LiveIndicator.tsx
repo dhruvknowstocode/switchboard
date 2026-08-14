@@ -1,8 +1,5 @@
 import type { WsConnectionStatus } from '@/types';
 
-/**
- * LIVE indicator — WebSocket connection status for the control plane.
- */
 export function LiveIndicator({ status }: { status: WsConnectionStatus }) {
   const color =
     status === 'connected'

@@ -20,9 +20,6 @@ const ENTITY_FILTERS = [
   { value: 'ApiKey', label: 'ApiKey' },
 ] as const;
 
-/**
- * Live audit trail from GET /api/v1/audit-logs.
- */
 export function AuditLogList() {
   const [entityType, setEntityType] = useState('');
 

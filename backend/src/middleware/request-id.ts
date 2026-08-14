@@ -1,10 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'crypto';
 
-/**
- * Attaches a unique request ID for tracing / structured logs.
- * TODO: Phase 6 — propagate via OpenTelemetry / correlation headers.
- */
+/** Attaches `x-request-id` for tracing across logs and responses. */
 export function requestIdMiddleware(
   req: Request,
   res: Response,

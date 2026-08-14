@@ -16,9 +16,6 @@ import { listFeatureFlags } from '@/services/feature-flags.service';
 import { listIncidents } from '@/services/incidents.service';
 import { listAuditLogs } from '@/services/audit-logs.service';
 
-/**
- * Dashboard overview with live flag summary + realtime activity feed.
- */
 export function DashboardOverview() {
   const { status, events } = useRealtime();
   const { data: flags, isLoading } = useQuery({

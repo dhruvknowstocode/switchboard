@@ -3,8 +3,7 @@ import type { ZodSchema } from 'zod';
 import { AppError } from './error-handler.js';
 
 /**
- * Request validation middleware stub using Zod.
- * TODO: Phase 2+ — wire schemas per route (body / query / params).
+ * Zod request validation helpers (body / query).
  */
 export function validateBody<T>(schema: ZodSchema<T>) {
   return (req: Request, _res: Response, next: NextFunction): void => {
@@ -35,7 +34,6 @@ export function validateQuery<T>(schema: ZodSchema<T>) {
       return;
     }
 
-    // Attach validated query for handlers until Phase 2 types this on Request.
     (req as Request & { validatedQuery?: T }).validatedQuery = result.data;
     next();
   };

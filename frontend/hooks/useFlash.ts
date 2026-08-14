@@ -2,9 +2,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-/**
- * Short-lived success / error flash for action feedback.
- */
 export function useFlash(timeoutMs = 2500) {
   const [message, setMessage] = useState<string | null>(null);
   const [tone, setTone] = useState<'ok' | 'danger'>('ok');

@@ -6,12 +6,10 @@ interface LoginResponse {
     accessToken: string;
     user: User;
   };
-  meta?: { stub?: boolean };
 }
 
 interface MeResponse {
   data: User;
-  meta?: { stub?: boolean };
 }
 
 export async function login(email: string, password: string) {

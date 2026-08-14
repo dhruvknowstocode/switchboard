@@ -1,9 +1,6 @@
 import type { Role, User } from '@prisma/client';
 import { prisma } from '../database/prisma.js';
 
-/**
- * User repository — Prisma data access for authentication & user admin.
- */
 export const userRepository = {
   async findAll(): Promise<User[]> {
     return prisma.user.findMany({

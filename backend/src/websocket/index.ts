@@ -4,17 +4,7 @@ import { randomUUID } from 'crypto';
 import { addClient, removeClient } from './connection-manager.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * WebSocket server attached to the HTTP server.
- *
- * Path: /ws
- *
- * TODO: Phase 4 —
- * - Authenticate via JWT (query param or first message)
- * - Subscribe clients to channels
- * - Heartbeat / ping-pong
- * - Reconnect guidance for frontend
- */
+/** WebSocket server on path `/ws` — fans out Redis Pub/Sub events to dashboards. */
 let wss: WebSocketServer | null = null;
 
 export function initWebSocketServer(server: http.Server): WebSocketServer {
@@ -22,7 +12,6 @@ export function initWebSocketServer(server: http.Server): WebSocketServer {
 
   wss.on('connection', (socket: WebSocket, _req) => {
     const clientId = randomUUID();
-    // TODO: Phase 4 — extract JWT from req.url query (?token=) and resolve user
     addClient(clientId, socket);
 
     socket.send(

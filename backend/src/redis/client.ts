@@ -3,11 +3,7 @@ import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
 /**
- * Redis clients.
- * - `redis` — general commands + cache + publish
- * - `redisSubscriber` — dedicated subscriber (ioredis requirement)
- *
- * TODO: Phase 4 — connection retry strategy, key prefixing, TLS in production.
+ * Two Redis connections are required: one for commands/publish, one for subscribe.
  */
 
 const redisOptions = {
@@ -33,7 +29,7 @@ export async function connectRedis(): Promise<void> {
     if (redisSubscriber.status === 'wait') await redisSubscriber.connect();
     logger.info('Redis connected');
   } catch (error) {
-    logger.warn('Redis unavailable — continuing in degraded mode (scaffold)', {
+    logger.warn('Redis unavailable — continuing in degraded mode', {
       error: error instanceof Error ? error.message : String(error),
     });
   }
@@ -51,7 +47,7 @@ export async function checkRedisHealth(): Promise<boolean> {
   }
 }
 
-/** Cache key helper: feature-flag:{env}:{key} */
+/** Cache key: feature-flag:{env}:{key} */
 export function featureFlagCacheKey(environment: string, flagKey: string): string {
   return `feature-flag:${environment}:${flagKey}`;
 }

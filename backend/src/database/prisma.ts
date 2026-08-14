@@ -1,10 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger.js';
 
-/**
- * Shared Prisma client singleton.
- * TODO: Phase 6 — graceful disconnect on shutdown (wired in server.ts).
- */
+/** Shared Prisma client singleton. */
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 export const prisma =

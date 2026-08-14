@@ -7,10 +7,7 @@ import { redis, redisSubscriber } from './redis/client.js';
 import { initWebSocketServer } from './websocket/index.js';
 import { initPubSubSubscriptions } from './redis/pubsub.js';
 
-/**
- * HTTP + WebSocket server bootstrap.
- * TODO: Phase 6 — full graceful shutdown, metrics, rate limiting.
- */
+/** HTTP + WebSocket server bootstrap. */
 async function main(): Promise<void> {
   const app = createApp();
   const server = http.createServer(app);

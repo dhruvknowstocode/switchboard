@@ -9,9 +9,6 @@ import auditLogsRoutes from './audit-logs.routes.js';
 import healthRoutes from './health.routes.js';
 import apiKeysRoutes from './api-keys.routes.js';
 
-/**
- * Mounts all versioned REST API modules under /api/v1.
- */
 export function createApiRouter(): Router {
   const router = Router();
 

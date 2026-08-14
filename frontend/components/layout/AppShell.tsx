@@ -6,9 +6,6 @@ import { Topbar } from './Topbar';
 import { RequireAuth } from '@/components/auth/RequireAuth';
 import { RealtimeProvider } from '@/components/realtime/RealtimeProvider';
 
-/**
- * App shell for authenticated control-plane pages.
- */
 export function AppShell({
   title,
   children,

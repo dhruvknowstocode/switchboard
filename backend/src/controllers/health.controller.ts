@@ -2,10 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { checkDatabaseHealth } from '../database/prisma.js';
 import { checkRedisHealth } from '../redis/client.js';
 
-/**
- * Health controller — app / Postgres / Redis probes.
- * TODO: Phase 6 — deeper readiness vs liveness split.
- */
+/** Health probes for app / Postgres / Redis. */
 export const healthController = {
   async check(_req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

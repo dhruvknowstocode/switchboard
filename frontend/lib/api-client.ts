@@ -1,6 +1,6 @@
 /**
- * Minimal REST API client.
- * TODO: Phase 2 — attach JWT, refresh handling, typed error mapping.
+ * Browser REST client for the Switchboard control plane.
+ * Attaches JWT from localStorage when present.
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
@@ -23,7 +23,6 @@ export async function apiFetch<T>(
   const headers = new Headers(options.headers);
   headers.set('Content-Type', 'application/json');
 
-  // TODO: Phase 2 — Authorization: Bearer <token>
   const token =
     typeof window !== 'undefined' ? window.localStorage.getItem('sb_token') : null;
   if (token) {

@@ -15,10 +15,7 @@ export class AppError extends Error {
   }
 }
 
-/**
- * Centralized Express error handler.
- * TODO: Phase 6 — structured logging, Sentry/metrics hooks.
- */
+/** Centralized Express error handler. */
 export function errorHandler(
   err: unknown,
   req: Request,

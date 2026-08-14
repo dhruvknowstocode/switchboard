@@ -129,10 +129,10 @@ export function Sidebar() {
       <div className="border-t border-board-border/80 p-4">
         <div className="rounded-xl border border-board-border/70 bg-board-elevated/60 px-3 py-2.5">
           <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-board-accent">
-            Phase 6
+            Control plane
           </div>
           <div className="mt-1 text-[11px] text-board-muted">
-            SDK · Audit · Targeting
+            Flags · Incidents · Audit
           </div>
         </div>
       </div>
